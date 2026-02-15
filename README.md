@@ -67,17 +67,21 @@ Unzip all the downloaded files into the `wheels` directory:
 unzip wheels/*.zip -d wheels/
 ```
 
-**5. Install the Wheels**
+**5. Install the Wheels with `pip`**
 
-Now, install the local wheels using `pip`. The `--no-deps` flag tells pip to not install dependencies, as we will let `uv` handle that in the next step.
+Next, use `pip` to install the wheels you just downloaded.
+
+We use `pip` here for its ability to directly install the `.whl` files without resolving dependencies yet. The `--no-deps` flag is crucial—it prevents `pip` from trying to download any dependencies, ensuring that only our pre-built wheels are placed into the environment.
 
 ```bash
 pip install --no-deps wheels/*.whl
 ```
 
-**6. Install aider-chat**
+**6. Install aider-chat with `uv`**
 
-Finally, install `aider-chat` with its remaining dependencies using `uv`. `uv` will use the wheels we installed locally and download any other packages needed.
+Finally, use `uv` to install `aider-chat`. `uv`'s fast dependency resolver will scan the environment, see that the complex packages (like `numpy` and `scipy`) are already installed, and only download the remaining small dependencies.
+
+This two-step process ensures the pre-compiled wheels are used while letting `uv` handle the final dependency resolution efficiently.
 
 ```bash
 uv pip install aider-chat
