@@ -6,15 +6,19 @@ No compilation needed — hours of build time saved! This method provides the fa
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed in Termux:
+Before you begin, ensure you have the following installed in Termux. You can install them using `pkg install` for most of these, and `pip install` for `uv`.
 
-*   `python` (version 3.12)
-*   `pip`
-*   `uv`
-*   `unzip`
-*   `wget` or `curl`
+```bash
+pkg update && pkg upgrade -y
+pkg install python unzip wget curl -y
+pip install uv
+```
 
-You can install `uv` via pip: `pip install uv`.
+*   `python` (version 3.12) - Installed via `pkg install python`
+*   `pip` - Comes with `python`
+*   `uv` - Installed via `pip install uv`
+*   `unzip` - Installed via `pkg install unzip`
+*   `wget` or `curl` - Installed via `pkg install wget` or `pkg install curl`
 
 ## Installation Steps
 
@@ -47,10 +51,11 @@ Create a `wheels` directory and download the files into it. For example, using `
 ```bash
 mkdir wheels
 cd wheels
-# Replace the URLs with the actual links from the releases page
-wget LATEST_RELEASE_URL/aider-termux-scipy-py312.zip
-wget LATEST_RELEASE_URL/aider-termux-numpy-py312.zip
-# ... and so on for all the zip files
+wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-scipy-py312.zip
+wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-numpy-py312.zip
+wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-rust-py312.zip
+wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-light-py312.zip
+wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-treesitter-py312.zip
 cd ..
 ```
 
