@@ -97,3 +97,11 @@ If this saved you hours of compilation, consider buying me a coffee:
 [![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-FFDD00?style=flat-square&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/Lukl)
 
 <https://www.buymeacoffee.com/Lukl>
+---
+
+## Related guide
+
+The same build tricks (libpython-link, rustc 1.98 ICE workarounds,
+`__ANDROID_MIN_SDK_VERSION__`, wheel-first builds) are documented in the
+**[OpenViking Termux Wheels guide](https://github.com/skoll43/openviking-termux-wheels/blob/main/GUIDE.md)** —
+including the 10-entry troubleshooting appendix.
