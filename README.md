@@ -4,6 +4,11 @@ Pre-built Python wheels for **aider-chat 0.86.2** on Termux (Android aarch64, Py
 
 No compilation needed — hours of build time saved! This method provides the fast path for installation.
 
+> **🆕 August 2026 update:** aider **0.86.3.dev53 (git main) now works on Python 3.14** —
+> using apt prebuilt numpy/scipy + fewer source builds than ever. See
+> **[UPDATE-2026.md](UPDATE-2026.md)** and the
+> [py314 wheels release](https://github.com/skoll43/aider-chat-termux-wheels/releases).
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed in Termux. You can install them using `pkg install` for most of these, and `pip install` for `uv`.
