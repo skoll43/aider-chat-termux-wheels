@@ -120,8 +120,9 @@ does not import it; install with cargo if you need huge hub downloads.
   (libpython-link, rustc 1.98 ICE workarounds, `__ANDROID_MIN_SDK_VERSION__`).
 - **[GUIDE.md](GUIDE.md)** — the original Feb 2026 full compilation guide
   (Python 3.12; kept as history and fix reference).
-- `build-on-colab.sh` (in the repo root) — cross-compile the wheels on an
-  Ubuntu/Colab VM (NDK r27d + Termux py3.14 headers) instead of on-device.
+- The wheel builds themselves were done on-device (Termux build env) and
+  cross-checked against the openviking build outputs; see the GUIDEs for the
+  exact flags (libpython-link, rustc 1.98 ICE workarounds).
 
 ## Historical: February 2026 release (Python 3.12)
 
