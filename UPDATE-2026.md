@@ -4,6 +4,10 @@
 > Date: August 2026 · Python 3.14.6 · rustc 1.98.0
 > Same device: Xiaomi Redmi 12 5G (aarch64, 6 cores, 8 GB swap)
 
+> **For the current install instructions use [README.md](README.md).** This file is
+> the background: how the 2026 build changed vs Feb, and what was learned while
+> building it on-device. The README flow is fresh-install verified.
+
 This updates the [Feb 2026 GUIDE](../aider-chat-termux-wheels/GUIDE.md) with
 what changed on modern Termux (python 3.14 / rustc 1.98) and the faster recipe.
 
@@ -47,9 +51,12 @@ pkg install -y python-numpy python-scipy python-pillow python-psutil \
 uv venv --system-site-packages .venv
 uv pip install --python .venv/bin/python pip setuptools wheel
 
-# 3. wheels that still need source builds (from the openviking-termux-wheels release,
-#    or build them: see openviking-termux-wheels/GUIDE.md for the exact flags)
-pip install --no-deps ~/wheels/aider314/*.whl
+# 3. the 20-wheel binary bundle from THIS repo's release
+#    (aider-termux-py314-wheels.zip @ v0.86.3.dev53-py314 — covers ALL binary
+#    deps incl. aiohttp/cffi/regex/yarl/propcache; see README.md step 3)
+wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.3.dev53-py314/aider-termux-py314-wheels.zip
+unzip aider-termux-py314-wheels.zip -d wheels
+pip install --no-deps wheels/*.whl
 
 # 4. pure-python deps — ALL from prebuilt wheels at aider's exact pins (no builds)
 #    (see pure-deps-pinned.txt in this repo — generated from aider 0.86.3.dev53 metadata;
@@ -65,16 +72,18 @@ pip install --no-deps audioop-lts          # audioop for py3.14 (sdist build, ti
 printf 'from audioop import *\n' > .venv/lib/python3.14/site-packages/pyaudioop.py  # pydub shim
 ```
 
-## Wheels that still need source builds (py314)
+## Wheels that needed source builds (py314) — now shipped in the release bundle
 
-Only these — everything else is apt or pure-python wheels:
+As of 2026-08-29 **every wheel below is in `aider-termux-py314-wheels.zip`**
+(20 wheels) — nobody needs to build them. This list is kept as the record of
+what was built on-device for the original install:
 
 - pydantic-core 2.41.5, jiter 0.13.0, rpds-py 0.30.0, orjson 3.11.7, watchfiles 1.1.1 (Rust)
 - tree-sitter 0.25.2, tree-sitter-language-pack 0.13.0, tree-sitter-c-sharp 0.23.1,
   tree-sitter-embedded-template 0.25.0, tree-sitter-yaml 0.7.2 (yaml needs scanner.c patch)
-- cffi 2.0/2.1, regex, aiohttp family, markupsafe, pyyaml (same versions as Feb guide,
-  rebuilt for cp314)
-- audioop-lts 0.2.2 (tiny C)
+- cffi 2.1.1, regex 2026.7.19, aiohttp 3.14.3, yarl 1.24.5, propcache 0.5.2,
+  markupsafe, pyyaml (same versions as the openviking build, cp314)
+- audioop-lts 0.2.2 (tiny C) — still a per-install straggler (seconds)
 
 ## Verified
 
