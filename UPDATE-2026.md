@@ -52,7 +52,8 @@ uv pip install --python .venv/bin/python pip setuptools wheel
 pip install --no-deps ~/wheels/aider314/*.whl
 
 # 4. pure-python deps — ALL from prebuilt wheels at aider's exact pins (no builds)
-#    (see pure-deps-pinned list; includes openai==2.28.0, fastapi, litellm==1.82.3, ...)
+#    (see pure-deps-pinned.txt in this repo — generated from aider 0.86.3.dev53 metadata;
+#     includes openai==2.28.0, fastapi, litellm==1.82.3, ...)
 
 # 5. aider itself (git main — the version that supports Python 3.14)
 pip install --no-deps "git+https://github.com/Aider-AI/aider.git"
