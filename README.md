@@ -1,17 +1,23 @@
 # aider-chat Termux Wheels
 
-Pre-built Python wheels for **aider-chat 0.86.2** on Termux (Android aarch64, Python 3.12).
+Pre-built Android wheels for **aider-chat 0.86.3.dev53 (git main)** on Termux
+(Android aarch64, **Python 3.14**).
 
-No compilation needed — hours of build time saved! This method provides the fast path for installation.
+> **Status: ✅ Working (August 2026)** — on-device verified:
+> `aider 0.86.3.dev53+g5dc9490bb`, Python 3.14.6, rustc 1.98.0.
 
-> **🆕 August 2026 update:** aider **0.86.3.dev53 (git main) now works on Python 3.14** —
-> using apt prebuilt numpy/scipy + fewer source builds than ever. See
-> **[UPDATE-2026.md](UPDATE-2026.md)** and the
-> [py314 wheels release](https://github.com/skoll43/aider-chat-termux-wheels/releases).
+The heavy packages that have **no Android wheels** are covered by this release
+(zero compilation on the phone): apt provides `numpy`/`scipy`/`tokenizers`/
+`tiktoken`/`cryptography`/`pillow`/`psutil`/`lxml` prebuilt, and this repo
+provides the one wheel bundle for the Rust/C extensions.
+
+> **📌 Full recipe & gotchas:** see **[UPDATE-2026.md](UPDATE-2026.md)** — the
+> complete August 2026 install walkthrough (why Python 3.14, the
+> libpython-link fix, exact pins, runtime stragglers).
+> **[GUIDE.md](GUIDE.md)** remains the full compilation guide (Feb 2026,
+> Python 3.12 build history; every fix that also applies to 3.14 is there).
 
 ## Prerequisites
-
-Before you begin, ensure you have the following installed in Termux. You can install them using `pkg install` for most of these, and `pip install` for `uv`.
 
 ```bash
 pkg update && pkg upgrade -y
@@ -19,97 +25,85 @@ pkg install python unzip wget curl -y
 pip install uv
 ```
 
-*   `python` (version 3.12) - Installed via `pkg install python`
-*   `pip` - Comes with `python`
-*   `uv` - Installed via `pip install uv`
-*   `unzip` - Installed via `pkg install unzip`
-*   `wget` or `curl` - Installed via `pkg install wget` or `pkg install curl`
+*   `python` (3.14) — via `pkg install python`
+*   `uv` — via `pip install uv`
+*   `unzip`, `wget`/`curl` — via `pkg`
 
-## Installation Steps
+## Installation (2026 — recommended)
 
-Follow these steps carefully to install `aider-chat` using the pre-built wheels.
-
-**1. Create a Project Directory**
-
-First, create a directory for your project and navigate into it:
+**1. Install the apt-prebuilt heavy deps (no compilation):**
 
 ```bash
-mkdir ~/my-aider-project
-cd ~/my-aider-project
+pkg install -y python-numpy python-scipy python-pillow python-psutil \
+  python-tokenizers python-tiktoken python-cryptography python-lxml
 ```
 
-**2. Create and Activate a Virtual Environment**
-
-It is highly recommended to use a virtual environment to avoid conflicts with other Python packages.
+**2. Create a venv that sees the apt packages:**
 
 ```bash
-python -m venv .venv
+mkdir -p ~/my-aider-project && cd ~/my-aider-project
+uv venv --system-site-packages .venv
 source .venv/bin/activate
+uv pip install pip setuptools wheel
 ```
 
-**3. Download the Wheels**
-
-Download all the `.zip` files from the [Releases page](https://github.com/skoll43/aider-chat-termux-wheels/releases) of this repository.
-
-Create a `wheels` directory and download the files into it. For example, using `wget`:
+**3. Download the single wheel bundle and install it:**
 
 ```bash
-mkdir wheels
-cd wheels
-wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-scipy-py312.zip
-wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-numpy-py312.zip
-wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-rust-py312.zip
-wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-light-py312.zip
-wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.2-android-aarch64-py312/aider-termux-treesitter-py312.zip
-cd ..
-```
-
-**4. Unzip the Wheels**
-
-Unzip all the downloaded files into the `wheels` directory:
-
-```bash
-unzip wheels/*.zip -d wheels/
-```
-
-**5. Install the Wheels with `pip`**
-
-Next, use `pip` to install the wheels you just downloaded.
-
-We use `pip` here for its ability to directly install the `.whl` files without resolving dependencies yet. The `--no-deps` flag is crucial—it prevents `pip` from trying to download any dependencies, ensuring that only our pre-built wheels are placed into the environment.
-
-```bash
+wget https://github.com/skoll43/aider-chat-termux-wheels/releases/download/v0.86.3.dev53-py314/aider-termux-py314-wheels.zip
+unzip aider-termux-py314-wheels.zip -d wheels
 pip install --no-deps wheels/*.whl
 ```
 
-**6. Install aider-chat with `uv`**
-
-Finally, use `uv` to install `aider-chat`. `uv`'s fast dependency resolver will scan the environment, see that the complex packages (like `numpy` and `scipy`) are already installed, and only download the remaining small dependencies.
-
-This two-step process ensures the pre-compiled wheels are used while letting `uv` handle the final dependency resolution efficiently.
+**4. Install aider itself (git main — the version that supports Python 3.14):**
 
 ```bash
-uv pip install aider-chat
+pip install --no-deps "git+https://github.com/Aider-AI/aider.git"
 ```
 
-After these steps, you should be able to run `aider-chat` from your terminal.
+**5. Runtime stragglers found by running it:**
 
-## Wheel Contents
+```bash
+pip install --only-binary :all: json_logic
+pip install --only-binary :all: "pydantic==2.12.5"
+pip install --no-deps audioop-lts          # audioop for py3.14 (tiny C sdist)
+printf 'from audioop import *\n' > .venv/lib/python3.14/site-packages/pyaudioop.py  # pydub shim
+```
 
-| Archive | Packages |
-|---------|----------|
-| `aider-termux-scipy-py312.zip` | scipy 1.15.3 |
-| `aider-termux-numpy-py312.zip` | numpy 1.26.4, tiktoken 0.12.0 |
-| `aider-termux-rust-py312.zip` | pydantic-core, tokenizers, orjson, rpds-py, watchfiles, fastuuid, jiter |
-| `aider-termux-light-py312.zip` | aiohttp, cffi, markupsafe, pillow, psutil, pyyaml, regex |
-| `aider-termux-treesitter-py312.zip` | tree-sitter, tree-sitter-yaml, tree-sitter-c-sharp, tree-sitter-embedded-template, tree-sitter-language-pack |
+**6. Verify:**
+
+```bash
+aider --version   # aider 0.86.3.dev53+g5dc9490bb
+```
+
+Only step left: API keys (`~/.aider.model.settings.yml`,
+`~/.aider.model.metadata.json`, `OPENAI_API_KEY`) — same as GUIDE.md Step 10.
+
+## Wheel Contents (`aider-termux-py314-wheels.zip`)
+
+| Group | Packages |
+|-------|----------|
+| Rust | pydantic-core 2.41.5, jiter 0.13.0, rpds-py 0.30.0, orjson 3.11.7, watchfiles 1.1.1, fastuuid 0.14.0 |
+| tree-sitter | tree-sitter 0.25.2, tree-sitter-language-pack 0.13.0, tree-sitter-c-sharp 0.23.1, tree-sitter-embedded-template 0.25.0, tree-sitter-yaml 0.7.2 |
+| C / pure | pyyaml 6.0.3, markupsafe 3.0.3, frozenlist 1.8.0, multidict 6.7.1 |
 
 ## Platform
 
 - Android aarch64
-- Python 3.12
+- Python 3.14
 - Termux (F-Droid)
+
+## Historical: February 2026 release (Python 3.12)
+
+The original build (aider **0.86.2**, Python **3.12**, 5 wheel archives +
+source-built scipy) is still available at the
+[`v0.86.2-android-aarch64-py312`](https://github.com/skoll43/aider-chat-termux-wheels/releases/tag/v0.86.2-android-aarch64-py312)
+release. It is superseded by the py314 path above; its compilation procedure
+is documented in [GUIDE.md](GUIDE.md).
 
 ## Full Compilation Guide
 
-See [GUIDE.md](GUIDE.md) for the complete compilation instructions, including all fixes and workarounds, that I followed to build these wheels.
+See [GUIDE.md](GUIDE.md) for the complete compilation instructions, including
+all fixes and workarounds (rustc 1.98 ICE workarounds, libpython-link,
+`__ANDROID_MIN_SDK_VERSION__`, tree-sitter scanner patches), and
+[UPDATE-2026.md](UPDATE-2026.md) for how the recipe changed on Python 3.14.

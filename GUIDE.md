@@ -6,6 +6,14 @@
 > Model: moonshotai/kimi-k2.5 via Nvidia API  
 > Date: February 2026
 
+> **📌 August 2026 update:** the current path is **[UPDATE-2026.md](UPDATE-2026.md)** —
+> aider **0.86.3.dev53 (git main)** on **Python 3.14** with apt-prebuilt
+> numpy/scipy and the single [py314 wheels release](https://github.com/skoll43/aider-chat-termux-wheels/releases).
+> This guide below documents the original Feb 2026 build (aider 0.86.2,
+> Python 3.12) — kept as history and as the source of the build-level fixes
+> (libpython-link, rustc 1.98 ICE workarounds, `__ANDROID_MIN_SDK_VERSION__`)
+> that still apply on 3.14.
+
 ---
 
 ## Why All These Heavy Packages?
